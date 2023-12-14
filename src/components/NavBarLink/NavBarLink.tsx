@@ -1,7 +1,12 @@
 import React from 'react';
 
-const NavBarLink = () => {
-  return <div>NavBarLink</div>;
+interface NavBarLinkProps {
+  href: string;
+  children: string;
+}
+
+const NavBarLink = ({ href, children: text }: NavBarLinkProps) => {
+  return <div>{text}</div>;
 };
 
 export default NavBarLink;
