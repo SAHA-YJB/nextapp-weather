@@ -21,7 +21,7 @@ const Header = () => {
           </Link>
           <div className='header__split w-[1px] h1/2 bg-slate-300 self-center mx-6' />
           <NavBar>
-            <NavBarLink href='/'>홈</NavBarLink>
+            <NavBarLink href='/'>Home</NavBarLink>
           </NavBar>
         </div>
 
