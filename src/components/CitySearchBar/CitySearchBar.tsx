@@ -7,6 +7,7 @@ const CitySearchBar = () => {
   const [search, setSearch] = useState('');
   const [isShowingSearchResults, setIsShowingSearchResults] = useState(false);
 
+  //요청을 보내는 함수
   const cities = useQuery({
     queryKey: [search.toLowerCase()],
     refetchOnMount: true,
