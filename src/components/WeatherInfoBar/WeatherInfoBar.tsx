@@ -4,7 +4,10 @@ import { getWeatherLink } from '@/services/weatherLink';
 import { useChosenCity } from '@/store/useChosenCity';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import DaySelectBtnRow from '../DaySelectBtnRow/DaySelectBtnRow';
+import DayWeatherInfo from '../DayWeatherInfo/DayWeatherInfo';
 
 const WeatherInfoBar = () => {
   const { chosenCity } = useChosenCity();
@@ -43,7 +46,39 @@ const WeatherInfoBar = () => {
   });
   console.log(sixDaysInfo);
 
-  return <div>WeatherInfoBar</div>;
+  if (weather.isLoading)
+    return (
+      <div>
+        <LoadingSpinner />
+      </div>
+    );
+
+  return (
+    <div
+      className={`weatherInfoBar w-full h-full gap-8 flex flex-grow flex-col`}
+    >
+      <h4
+        className={`weatherInfoBar__citySelected font-bold text-[1.5rem] text-sky-700`}
+      >
+        도시: {weather?.data?.city.name}
+      </h4>
+      <DaySelectBtnRow
+        dayShowing={dayShowing}
+        sixDaysInfo={sixDaysInfo}
+        setDayShowing={setDayShowing}
+      />
+      <div className={`w-full h-full weatherInfoBar__infoList`}>
+        {[...sixDaysInfo.keys()].map((key, index) => {
+          const dayInfo = sixDaysInfo.get(key);
+          if (dayInfo && index === dayShowing) {
+            return <DayWeatherInfo key={key} weatherInfo={dayInfo} />;
+          } else {
+            return <Fragment key={key}></Fragment>;
+          }
+        })}
+      </div>
+    </div>
+  );
 };
 
 export default WeatherInfoBar;
