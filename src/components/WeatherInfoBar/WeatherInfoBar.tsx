@@ -44,7 +44,6 @@ const WeatherInfoBar = () => {
       return fetchedWeather;
     },
   });
-  console.log(sixDaysInfo);
 
   if (weather.isLoading)
     return (
