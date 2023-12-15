@@ -1,4 +1,5 @@
 'use client';
+import { WeatherListElement, WeatherRequest } from '@/models/weatherRequest';
 import { getWeatherLink } from '@/services/weatherLink';
 import { useChosenCity } from '@/store/useChosenCity';
 import { useQuery } from '@tanstack/react-query';
@@ -8,7 +9,10 @@ import React, { useState } from 'react';
 const WeatherInfoBar = () => {
   const { chosenCity } = useChosenCity();
   const [dayShowing, setDayShowing] = useState(0);
-  const [sixDaysInfo, setSixDaysInfo] = useState(new Map());
+  const [sixDaysInfo, setSixDaysInfo] = useState(
+    // <키타입, 밸류타입>
+    new Map<string, WeatherListElement[]>()
+  );
 
   const weather = useQuery({
     queryKey: [chosenCity.id],
@@ -16,7 +20,9 @@ const WeatherInfoBar = () => {
       const weatherLink = getWeatherLink(chosenCity.coord);
       if (!weatherLink) return null;
 
-      const { data: fetchedWeather } = await axios.get(weatherLink);
+      const { data: fetchedWeather } = await axios.get<WeatherRequest>(
+        weatherLink
+      );
       const sixDaysInfoKeys = [...sixDaysInfo.keys()];
 
       sixDaysInfoKeys.map((key) => {
