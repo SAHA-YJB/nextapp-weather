@@ -1,7 +1,7 @@
 export interface WeatherDbData {
   id: number;
   name: string;
-  cord: {
+  coord: {
     lat: number;
     lon: number;
   };

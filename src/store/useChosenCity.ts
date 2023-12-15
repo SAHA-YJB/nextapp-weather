@@ -10,7 +10,7 @@ export const useChosenCity = create<ChosenCityState>((set) => ({
   chosenCity: {
     id: 0,
     name: '',
-    cord: {
+    coord: {
       lat: 0,
       lon: 0,
     },
