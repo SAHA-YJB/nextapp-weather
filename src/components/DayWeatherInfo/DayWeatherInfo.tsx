@@ -53,8 +53,10 @@ const DayWeatherInfo = ({ weatherInfo }: DayWeatherInfoProps) => {
               <span className='font-semibold'>{timeInfo.main.feels_like}</span>
             </span>
 
-            <span className='font-bold'>{timeInfo.weather[0].main}</span>
-            {timeInfo.weather[0].description}
+            <span className='font-bold'>
+              {timeInfo.weather[0].main}
+              <div>{timeInfo.weather[0].description}</div>
+            </span>
           </div>
         );
       })}
