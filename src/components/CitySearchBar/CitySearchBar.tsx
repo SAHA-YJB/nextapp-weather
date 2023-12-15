@@ -5,24 +5,26 @@ import axios from 'axios';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import CitySearchBarItem from '../CitySearchBarItem/CitySearchBarItem';
 import { WeatherDbData } from '@/models/weatherDbData';
+import { useDebounce } from '@/hooks/useDebounce';
 
 const CitySearchBar = () => {
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 1000);
   const [isShowingSearchResults, setIsShowingSearchResults] = useState(false);
 
   //요청을 보내는 함수
   const cities = useQuery({
-    queryKey: [search.toLowerCase()],
+    queryKey: [debouncedSearch.toLowerCase()],
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     queryFn: async () => {
-      if (!search) {
+      if (!debouncedSearch) {
         setIsShowingSearchResults(false);
         return [];
       }
       try {
         const fetchedCities = await axios.get<WeatherDbData[]>(
-          `/api/cities/${search}`
+          `/api/cities/${debouncedSearch}`
         );
 
         if (fetchedCities.status !== 200) {
@@ -41,7 +43,7 @@ const CitySearchBar = () => {
 
   useEffect(() => {
     cities.refetch();
-  }, [search]);
+  }, [debouncedSearch]);
 
   return (
     <div className='searchBar'>

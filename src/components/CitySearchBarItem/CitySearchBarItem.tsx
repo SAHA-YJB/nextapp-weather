@@ -1,4 +1,5 @@
 import { WeatherDbData } from '@/models/weatherDbData';
+import { useChosenCity } from '@/store/useChosenCity';
 import React from 'react';
 
 interface CitySearchBarItemProps {
@@ -12,8 +13,15 @@ const CitySearchBarItem = ({
   onClick,
   noResultText,
 }: CitySearchBarItemProps) => {
+  const { setChosenCity } = useChosenCity();
   return (
     <div
+      onClick={() => {
+        if (city) {
+          setChosenCity(city);
+        }
+        onClick();
+      }}
       className={`
       searchBarResult px-3 py-2 border-b-2 rounded-[10px] 
       transition-colors duration-200 text-black bg-white 
