@@ -2,6 +2,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import CitySearchBarItem from '../CitySearchBarItem/CitySearchBarItem';
+import { WeatherDbData } from '@/models/weatherDbData';
 
 const CitySearchBar = () => {
   const [search, setSearch] = useState('');
@@ -18,7 +21,9 @@ const CitySearchBar = () => {
         return [];
       }
       try {
-        const fetchedCities = await axios.get(`/api/cities/${search}`);
+        const fetchedCities = await axios.get<WeatherDbData[]>(
+          `/api/cities/${search}`
+        );
 
         if (fetchedCities.status !== 200) {
           console.error(fetchedCities);
@@ -38,7 +43,52 @@ const CitySearchBar = () => {
     cities.refetch();
   }, [search]);
 
-  return <div>CitySearchBar</div>;
+  return (
+    <div className='searchBar'>
+      <div
+        className={`searchBar__bar flex justify-between max-w-[300px] border-2 relative`}
+      >
+        <input
+          type='text'
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={cities.isLoading ? '로딩 중...' : '도시를 검색하세요!'}
+          className='searchBar__input w-full h-[48px] text-[1rem] px-3 py-2'
+        />
+        <div className='searchBar__LoadingSpinner absolute top-0 right-0 w-[48px] h-[48px] grid content-center'>
+          {cities.isLoading || cities.isFetching ? (
+            <LoadingSpinner width='w-[38px]' height='h-[38px]' />
+          ) : null}
+        </div>
+      </div>
+      {isShowingSearchResults ? (
+        <div
+          className={`searchBar__results absolute z-[2] flex flex-col gap-2 border-2 border-gray-500 my-1 rounded-[10px] p-2 w-[300px] bg-white`}
+        >
+          {cities.data && cities.data.length !== 0 ? (
+            cities.data.slice(0, 6).map((city) => (
+              <CitySearchBarItem
+                key={city.id}
+                city={city}
+                onClick={() => {
+                  setIsShowingSearchResults(false);
+                  setSearch('');
+                }}
+              />
+            ))
+          ) : (
+            <CitySearchBarItem
+              noResultText='검색 결과가 없습니다.'
+              onClick={() => {
+                setIsShowingSearchResults(false);
+                setSearch('');
+              }}
+            />
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
 };
 
 export default CitySearchBar;

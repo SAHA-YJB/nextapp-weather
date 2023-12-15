@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CitySearchBarItem = () => {
+const CitySearchBarItem = ({ city, onClick, noResultText }) => {
   return <div>CitySearchBarItem</div>;
 };
 
