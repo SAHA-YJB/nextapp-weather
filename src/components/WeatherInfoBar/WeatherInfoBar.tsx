@@ -10,10 +10,11 @@ import DaySelectBtnRow from '../DaySelectBtnRow/DaySelectBtnRow';
 import DayWeatherInfo from '../DayWeatherInfo/DayWeatherInfo';
 
 const WeatherInfoBar = () => {
+  // 선택된 도시를 가져옵니다.
   const { chosenCity } = useChosenCity();
+  // 현재 보여지는 날짜와 6일간의 날씨 정보를 저장할 상태를 생성합니다.
   const [dayShowing, setDayShowing] = useState(0);
   const [sixDaysInfo, setSixDaysInfo] = useState(
-    // <키타입, 밸류타입>
     new Map<string, WeatherListElement[]>()
   );
 
@@ -23,24 +24,29 @@ const WeatherInfoBar = () => {
       const weatherLink = getWeatherLink(chosenCity.coord);
       if (!weatherLink) return null;
 
+      // 날씨 정보를 가져옴
       const { data: fetchedWeather } = await axios.get<WeatherRequest>(
         weatherLink
       );
-      const sixDaysInfoKeys = [...sixDaysInfo.keys()];
 
-      sixDaysInfoKeys.map((key) => {
-        sixDaysInfo.set(key, []);
-      });
+      // 가져온 날씨 정보를 순회
       fetchedWeather.list.forEach((listInfoItem) => {
-        const listInfoItemDat = listInfoItem.dt_txt.split(' ')[0];
-        const mapDayWeather = sixDaysInfo.get(listInfoItemDat);
+        // listInfoItem에서 날짜 정보만 가져옴
+        const listInfoItemDate = listInfoItem.dt_txt.split(' ')[0];
+        // 현재 날짜에 해당하는 날씨 정보를 sixDaysInfo에서 가져옴
+        const mapDayWeather = sixDaysInfo.get(listInfoItemDate);
+        // 만약 현재 날짜에 해당하는 날씨 정보가 아직 없다면,
+        // 새로운 배열을 만들어서 현재 아이템의 날씨 정보를 추가
         if (!mapDayWeather?.length) {
-          sixDaysInfo.set(listInfoItemDat, [listInfoItem]);
+          sixDaysInfo.set(listInfoItemDate, [listInfoItem]);
         }
+        // 만약 현재 날짜에 해당하는 날씨 정보가 이미 있다면,
+        // 해당 배열에 현재 아이템의 날씨 정보를 추가
         if (mapDayWeather?.length) {
           mapDayWeather?.push(listInfoItem);
         }
       });
+      // 가져온 모든 날씨 정보를 반환합니다.
       return fetchedWeather;
     },
   });

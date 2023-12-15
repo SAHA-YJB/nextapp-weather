@@ -15,7 +15,9 @@ const CitySearchBar = () => {
   //요청을 보내는 함수
   const cities = useQuery({
     queryKey: [debouncedSearch.toLowerCase()],
+    // 컴포넌트가 마운트될 때마다 쿼리가 다시 실행
     refetchOnMount: true,
+    // 사용자가 다른 탭을 보다가 원래의 탭으로 돌아오면 쿼리가 다시 실행되어 최신 데이터를 가져옴
     refetchOnWindowFocus: false,
     queryFn: async () => {
       if (!debouncedSearch) {
